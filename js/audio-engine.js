@@ -26,17 +26,43 @@ class AudioEngine {
 
   loadState() {
     try {
-      const savedVolume = localStorage.getItem('suhanify_volume');
+      // 1. Migrate/load Volume
+      let savedVolume = localStorage.getItem('suhanify_volume');
+      if (savedVolume === null) {
+        const oldVolume = localStorage.getItem('pinboard_volume');
+        if (oldVolume !== null) {
+          savedVolume = oldVolume;
+          localStorage.setItem('suhanify_volume', oldVolume);
+        }
+      }
+      
       if (savedVolume !== null) {
         this.audio.volume = parseFloat(savedVolume);
       } else {
         this.audio.volume = 0.8;
       }
 
-      // Restoring all tracks from localStorage (with edits/deletions)
-      const savedTracks = localStorage.getItem('suhanify_tracks');
+      // 2. Migrate/load Tracks database
+      let savedTracks = localStorage.getItem('suhanify_tracks');
+      if (!savedTracks) {
+        // If suhanify_tracks doesn't exist, check old pinboard_custom_tracks
+        const oldCustom = localStorage.getItem('pinboard_custom_tracks');
+        if (oldCustom) {
+          const parsed = JSON.parse(oldCustom);
+          parsed.forEach(t => {
+            if (!this.tracks.find(existing => existing.id === t.id)) {
+              this.tracks.push(t);
+            }
+          });
+          localStorage.setItem('suhanify_tracks', JSON.stringify(this.tracks));
+          savedTracks = JSON.stringify(this.tracks);
+        }
+      }
+      
       if (savedTracks) {
         this.tracks = JSON.parse(savedTracks);
+        // Automatically sync to disk server on startup!
+        this.syncTracksWithServer();
       }
     } catch (e) {
       console.warn('Failed to load state from localStorage', e);

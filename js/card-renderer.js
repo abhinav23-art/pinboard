@@ -7,11 +7,33 @@ export class CardRenderer {
     this.positionsKey = 'suhanify_card_positions';
     this.variantsKey = 'suhanify_card_variants';
     
+    // Migrate positions/variants from pinboard keys if they don't exist yet
+    this.migrateKeys();
+
     // Cache for loaded positions/variants
     this.savedPositions = this.loadSavedPositions();
     this.savedVariants = this.loadSavedVariants();
 
     window.addEventListener('resize', () => this.handleResize());
+  }
+
+  migrateKeys() {
+    try {
+      if (!localStorage.getItem(this.positionsKey)) {
+        const oldPos = localStorage.getItem('pinboard_card_positions');
+        if (oldPos) {
+          localStorage.setItem(this.positionsKey, oldPos);
+        }
+      }
+      if (!localStorage.getItem(this.variantsKey)) {
+        const oldVars = localStorage.getItem('pinboard_card_variants');
+        if (oldVars) {
+          localStorage.setItem(this.variantsKey, oldVars);
+        }
+      }
+    } catch (e) {
+      console.warn('Migration of card metadata failed:', e);
+    }
   }
 
   loadSavedPositions() {
