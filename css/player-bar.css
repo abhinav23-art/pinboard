@@ -1,0 +1,396 @@
+/* Player Bar styling - persistent bottom tape */
+.player-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: var(--color-kraft);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='kraft-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23kraft-noise)' opacity='0.08'/%3E%3C/svg%3E");
+  border-top: 1.5px solid rgba(44, 41, 38, 0.15);
+  box-shadow: var(--shadow-bar);
+  z-index: var(--z-player-bar);
+  padding: 0 var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  transition: transform var(--transition-slow), height var(--transition-slow);
+}
+
+/* Masking Tape Endings effect */
+.player-bar::before,
+.player-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: var(--color-sketchbook);
+  z-index: 5;
+}
+
+.player-bar::before {
+  left: 0;
+  clip-path: polygon(100% 0, 0% 10%, 100% 20%, 0% 30%, 100% 40%, 0% 50%, 100% 60%, 0% 70%, 100% 80%, 0% 90%, 100% 100%);
+}
+
+.player-bar::after {
+  right: 0;
+  clip-path: polygon(0 0, 100% 10%, 0 20%, 100% 30%, 0 40%, 100% 50%, 0 60%, 100% 70%, 0 80%, 100% 90%, 0 100%);
+}
+
+/* Track info inside bar */
+.player-bar__track-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 200px;
+  max-width: 30%;
+  cursor: pointer;
+}
+
+.player-bar__thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  background-color: var(--color-polaroid);
+  border: 1px solid rgba(44, 41, 38, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  overflow: hidden;
+}
+
+.player-bar__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-bar__meta {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.player-bar__title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--color-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.player-bar__artist {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-pencil);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Player Bar Controls */
+.player-bar__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.player-bar__btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.player-bar__btn:hover {
+  background-color: rgba(44, 41, 38, 0.05);
+  transform: scale(1.05);
+}
+
+.player-bar__btn:active {
+  transform: scale(0.95);
+}
+
+.player-bar__btn--play {
+  width: 42px;
+  height: 42px;
+  background-color: var(--color-ink);
+  color: var(--color-sketchbook);
+}
+
+.player-bar__btn--play:hover {
+  background-color: var(--color-stamp);
+  color: var(--color-sketchbook);
+  border-color: var(--color-stamp);
+}
+
+.player-bar__btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Time Progress on the Tape */
+.player-bar__progress-wrapper {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  max-width: 50%;
+}
+
+.player-bar__time {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-pencil);
+  min-width: 35px;
+}
+
+.player-bar__slider-container {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.player-bar__slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: rgba(44, 41, 38, 0.15);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.player-bar__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-stamp);
+  cursor: pointer;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  transition: transform var(--transition-fast);
+}
+
+.player-bar__slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+}
+
+/* Volume Control */
+.player-bar__volume {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.player-bar__volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 70px;
+  height: 4px;
+  background: rgba(44, 41, 38, 0.15);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.player-bar__volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  cursor: pointer;
+}
+
+.player-bar__volume svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-width: 2;
+}
+
+/* --- EXPANDED PLAYER OVERLAY (Waveform & Details) --- */
+.player-bar--expanded {
+  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-8);
+  background-color: var(--color-sketchbook);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='noise-exp'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23noise-exp)' opacity='0.06'/%3E%3C/svg%3E");
+  border-top: none;
+}
+
+.player-bar--expanded::before,
+.player-bar--expanded::after {
+  display: none;
+}
+
+.player-bar--expanded .player-bar__close-btn {
+  position: absolute;
+  top: var(--space-6);
+  right: var(--space-6);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background: transparent;
+  transition: transform var(--transition-fast);
+}
+
+.player-bar--expanded .player-bar__close-btn:hover {
+  transform: scale(1.1) rotate(90deg);
+  background-color: var(--color-rose-trans);
+}
+
+/* Detailed content layout when expanded */
+.player-bar__expanded-content {
+  display: none; /* Hidden when collapsed */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: 500px;
+  animation: fade-in var(--transition-normal);
+}
+
+.player-bar--expanded .player-bar__expanded-content {
+  display: flex;
+}
+
+/* Hide standard layout components when expanded, or rearrange them */
+.player-bar--expanded .player-bar__track-info,
+.player-bar--expanded .player-bar__controls,
+.player-bar--expanded .player-bar__progress-wrapper,
+.player-bar--expanded .player-bar__volume {
+  display: none;
+}
+
+/* Expanded Card Visualizer components */
+.player-bar__expanded-art {
+  width: 260px;
+  aspect-ratio: 1;
+  background-color: var(--color-polaroid);
+  border: 1px solid rgba(44, 41, 38, 0.1);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card-hover);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transform: rotate(-1deg);
+}
+
+.player-bar__expanded-art-frame {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--color-kraft);
+  overflow: hidden;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-bar__expanded-art-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-bar__expanded-meta {
+  text-align: center;
+}
+
+.player-bar__expanded-title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  margin-bottom: var(--space-1);
+}
+
+.player-bar__expanded-artist {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-base);
+  color: var(--color-pencil);
+}
+
+/* Sketched Hand-drawn Waveform Canvas */
+.player-bar__waveform-container {
+  width: 100%;
+  height: 80px;
+  position: relative;
+  background: rgba(196, 168, 130, 0.1);
+  border-radius: 8px;
+  border: 1px dashed var(--color-kraft);
+  overflow: hidden;
+}
+
+.player-bar__waveform-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.player-bar__expanded-controls-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.player-bar__expanded-progress-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Responsive Mobile limits for player bar */
+@media (max-width: 767px) {
+  .player-bar {
+    padding: 0 var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .player-bar__track-info {
+    min-width: 120px;
+    max-width: 40%;
+  }
+
+  .player-bar__progress-wrapper {
+    max-width: 40%;
+  }
+
+  .player-bar__volume {
+    display: none; /* Hide volume on mobile to save space */
+  }
+}

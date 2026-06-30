@@ -1,0 +1,93 @@
+/* Keyframes and Animations */
+
+/* 1. Card entry slide-up and slap-on rotate animation */
+@keyframes card-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) rotate(calc(var(--rotate, 0deg) + 8deg)) scale(0.9);
+  }
+  70% {
+    transform: translateY(-5px) rotate(calc(var(--rotate, 0deg) - 1deg)) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--rotate, 0deg)) scale(1);
+  }
+}
+
+.card-anim-enter {
+  animation: card-enter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+/* 2. Cassette Reel Spin */
+@keyframes reel-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 3. Active Playing Light Pulse */
+@keyframes pulse-playing {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(192, 57, 43, 0), var(--shadow-card);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.18), var(--shadow-card-hover);
+  }
+}
+
+/* 4. Basic Fade In */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in var(--transition-normal) forwards;
+}
+
+/* 5. Pencil Scratch-out texture for Error cards */
+.card--error {
+  position: relative;
+  background-image: linear-gradient(
+    45deg,
+    transparent 46%,
+    var(--color-pencil) 49%,
+    var(--color-pencil) 51%,
+    transparent 54%
+  );
+  background-size: 15px 15px;
+}
+
+.card--error::before {
+  content: "SCRATCHED OUT";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  background: var(--color-stamp);
+  color: var(--color-polaroid);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-xs);
+  padding: 2px 6px;
+  box-shadow: var(--shadow-tape);
+  z-index: 8;
+  letter-spacing: 1px;
+}
+
+/* Empty State / Loading State Pencil animation */
+@keyframes scribble {
+  0%, 100% { transform: rotate(-3deg) translateY(0); }
+  50% { transform: rotate(3deg) translateY(-2px); }
+}
+
+.pencil-drawing-anim {
+  animation: scribble 1.5s ease-in-out infinite;
+}

@@ -1,0 +1,132 @@
+/* Search & Filter Component styling */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 280px;
+}
+
+/* Lined notebook paper styling for input */
+.search-input-wrapper {
+  background-color: var(--color-polaroid);
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 92%,
+    rgba(77, 134, 180, 0.12) 92%,
+    rgba(77, 134, 180, 0.12) 100%
+  );
+  background-size: 100% 20px;
+  border: 1px solid rgba(196, 168, 130, 0.4);
+  padding: 6px var(--space-3);
+  position: relative;
+  box-shadow: var(--shadow-tape);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  
+  /* Torn notebook paper effect */
+  clip-path: polygon(
+    0% 2px, 3% 0px, 6% 3px, 9% 0px, 12% 2px, 15% 0px, 18% 3px, 21% 0px, 24% 2px, 27% 0px, 30% 3px, 33% 0px, 36% 2px, 39% 0px, 42% 3px, 45% 0px, 48% 2px, 51% 0px, 54% 3px, 57% 0px, 60% 2px, 63% 0px, 66% 3px, 69% 0px, 72% 2px, 75% 0px, 78% 3px, 81% 0px, 84% 2px, 87% 0px, 90% 3px, 93% 0px, 96% 2px, 100% 0px,
+    100% 100%, 0% 100%
+  );
+}
+
+.search-input {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  width: 100%;
+  font-family: var(--ff-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-ink);
+  line-height: 20px;
+}
+
+.search-icon svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--color-pencil);
+  stroke-width: 2;
+}
+
+/* Tag filter line */
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filter-tag {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-xs);
+  padding: 2px 8px;
+  border: 1px dashed var(--color-kraft);
+  background: rgba(245, 240, 232, 0.6);
+  cursor: pointer;
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.filter-tag:hover {
+  transform: scale(1.05) rotate(-1deg);
+  background: var(--color-rose-trans);
+}
+
+.filter-tag--active {
+  background: var(--color-rose) !important;
+  border-style: solid;
+  color: var(--color-ink);
+  font-weight: 500;
+  box-shadow: var(--shadow-tape);
+  transform: rotate(1deg);
+}
+
+/* Add Music Sticker Button */
+.add-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-rose);
+  color: var(--color-ink);
+  font-family: var(--ff-display);
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+/* Peeling Sticker Effect */
+.add-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, transparent 50%, var(--color-sketchbook) 50%);
+  border-bottom-left-radius: 4px;
+  box-shadow: -1px 1px 2px rgba(44,41,38,0.2);
+  transition: width var(--transition-fast), height var(--transition-fast);
+}
+
+.add-btn:hover {
+  transform: scale(1.1) rotate(10deg);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.add-btn:hover::after {
+  width: 16px;
+  height: 16px;
+}
+
+.add-btn:active {
+  transform: scale(0.95);
+}
+
+/* Hidden file input */
+.file-input-hidden {
+  display: none;
+}

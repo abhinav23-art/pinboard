@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#2C2926" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Sketched musical note inside a cute circle -->
+  <circle cx="12" cy="12" r="9" stroke-dasharray="3 2" />
+  <path d="M9 15 A2 2 0 0 1 7 17 A2 2 0 0 1 5 15 A2 2 0 0 1 7 13 H9 V6 H17 V12 H9 M9 9 H17" />
+</svg>

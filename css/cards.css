@@ -1,0 +1,517 @@
+/* Card Base */
+.card {
+  width: 260px;
+  background: var(--color-polaroid);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), z-index 0s;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  position: relative;
+  user-select: none;
+}
+
+/* Card Hover & Drag States */
+.card:hover {
+  transform: translateY(-5px) rotate(calc(var(--rotate, 0deg) * 1.05)) scale(1.01);
+  box-shadow: var(--shadow-card-hover);
+  z-index: var(--z-active-card) !important;
+}
+
+.card--dragging {
+  transform: translateY(-8px) rotate(calc(var(--rotate, 0deg) + 3deg)) scale(1.04) !important;
+  box-shadow: var(--shadow-card-hover) !important;
+  z-index: var(--z-active-card) !important;
+  cursor: grabbing !important;
+  opacity: 0.9;
+}
+
+/* Active playing states */
+.card--playing {
+  animation: pulse-playing 2s infinite ease-in-out;
+}
+
+/* Pin decoration */
+.card__pin {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 4px 4px, var(--color-stamp), #962115);
+  box-shadow: var(--shadow-pin);
+  z-index: var(--z-pins);
+  pointer-events: none;
+}
+
+.card__pin::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%) rotate(15deg);
+  width: 2px;
+  height: 8px;
+  background: rgba(0,0,0,0.3);
+}
+
+/* Hidden state for filter */
+.card--hidden {
+  opacity: 0.15;
+  pointer-events: none;
+  transform: scale(0.9) rotate(0deg) !important;
+  box-shadow: none !important;
+}
+
+/* Base Internal Elements */
+.card__art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--color-kraft);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(44, 41, 38, 0.1);
+}
+
+.card__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card__art-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-display);
+  font-size: 72px;
+  color: var(--color-ink);
+  user-select: none;
+}
+
+.card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card__title {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: var(--color-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card__artist {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-pencil);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Controls */
+.card__controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: 2px;
+}
+
+.card__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-ink);
+  background: transparent;
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.card__btn:hover {
+  background-color: rgba(44, 41, 38, 0.05);
+  transform: scale(1.05);
+}
+
+.card__btn:active {
+  transform: scale(0.95);
+}
+
+.card__btn--play {
+  width: 38px;
+  height: 38px;
+  background-color: var(--color-ink);
+  color: var(--color-sketchbook);
+}
+
+.card__btn--play:hover {
+  background-color: var(--color-stamp);
+  color: var(--color-sketchbook);
+  border-color: var(--color-stamp);
+}
+
+.card__btn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Progress bar inside card */
+.card__progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.card__slider-container {
+  position: relative;
+  width: 100%;
+}
+
+.card__slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--color-kraft);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.card__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  cursor: pointer;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  transition: transform var(--transition-fast);
+}
+
+.card__slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: var(--color-stamp);
+}
+
+.card__time-info {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ff-sans);
+  font-size: var(--fs-xs);
+  color: var(--color-pencil);
+}
+
+/* Tags styled as cute washi tape scraps */
+.card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: 4px;
+}
+
+.tag {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-xs);
+  padding: 2px 8px;
+  transform: rotate(var(--tag-rot, -1deg));
+  box-shadow: var(--shadow-tape);
+  opacity: 0.85;
+}
+
+.tag--rose {
+  background-color: var(--color-rose-trans);
+  border-left: 2px dashed rgba(232, 160, 191, 0.8);
+  border-right: 2px dashed rgba(232, 160, 191, 0.8);
+}
+
+.tag--sage {
+  background-color: var(--color-sage-trans);
+  border-left: 2px dashed rgba(168, 197, 160, 0.8);
+  border-right: 2px dashed rgba(168, 197, 160, 0.8);
+}
+
+
+/* --- CARD VARIANTS --- */
+
+/* 1. Default: card--torn */
+.card--torn {
+  background: var(--color-sketchbook);
+  border: 1px solid rgba(196, 168, 130, 0.3);
+  /* Jagged torn edges using clip path */
+  clip-path: polygon(
+    0% 4px, 5% 0px, 10% 5px, 15% 1px, 20% 4px, 25% 0px, 30% 6px, 35% 2px, 40% 4px, 45% 1px, 50% 5px, 55% 2px, 60% 5px, 65% 1px, 70% 4px, 75% 0px, 80% 5px, 85% 2px, 90% 4px, 95% 1px, 100% 4px,
+    100% calc(100% - 4px), 95% calc(100% - 1px), 90% calc(100% - 5px), 85% calc(100% - 2px), 80% calc(100% - 4px), 75% calc(100% - 1px), 70% calc(100% - 6px), 65% calc(100% - 2px), 60% calc(100% - 4px), 55% calc(100% - 1px), 50% calc(100% - 5px), 45% calc(100% - 2px), 40% calc(100% - 4px), 35% calc(100% - 1px), 30% calc(100% - 5px), 25% calc(100% - 2px), 20% calc(100% - 4px), 15% calc(100% - 1px), 10% calc(100% - 5px), 5% calc(100% - 2px), 0% calc(100% - 4px)
+  );
+}
+
+/* 2. Polaroid Card */
+.card--polaroid {
+  background: var(--color-polaroid);
+  padding: 10px 10px 30px 10px; /* Thick bottom border */
+  border-radius: var(--radius-polaroid);
+  border: 1px solid rgba(44, 41, 38, 0.08);
+}
+
+.card--polaroid .card__art {
+  border-radius: 0;
+  aspect-ratio: 1;
+}
+
+.card--polaroid .card__title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-md);
+  text-align: center;
+  margin-top: var(--space-2);
+}
+
+.card--polaroid .card__artist {
+  display: none; /* hidden for polaroid style */
+}
+
+.card--polaroid .card__controls {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  height: calc(260px - 40px); /* Overlays polaroid art area */
+  background: rgba(250, 250, 250, 0.9);
+  transition: opacity var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: var(--radius-polaroid);
+  z-index: 5;
+  gap: var(--space-4);
+}
+
+.card--polaroid:hover .card__controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.card--polaroid .card__progress {
+  display: none; /* Hidden, polaroid uses bottom bar for detail */
+}
+
+/* 3. Sticky Note Card */
+.card--sticky {
+  background: var(--color-sticky);
+  border-radius: var(--radius-sticky);
+  padding: var(--space-4);
+  box-shadow: 2px 2px 6px rgba(44, 41, 38, 0.1);
+}
+
+/* Bottom curl shadow effect for sticky */
+.card--sticky::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 6px;
+  width: 90px;
+  height: 15px;
+  box-shadow: 0 8px 12px rgba(44, 41, 38, 0.25);
+  transform: rotate(2.5deg);
+  z-index: -1;
+}
+
+.card--sticky .card__art {
+  display: none; /* No art on sticky notes */
+}
+
+.card--sticky .card__title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.card--sticky .card__artist {
+  font-family: var(--ff-display);
+  font-size: var(--fs-md);
+  color: var(--color-ink);
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+.card--sticky .card__controls {
+  margin-top: auto;
+}
+
+.card--sticky .card__progress {
+  display: none; /* No progress bar */
+}
+
+/* 4. Cassette Card */
+.card--cassette {
+  width: 290px;
+  aspect-ratio: 1.55; /* wider */
+  background: #333230; /* dark plastic */
+  border-radius: var(--radius-cassette);
+  border: 4px solid #1e1e1d;
+  color: #fff;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-card);
+}
+
+.card--cassette:hover {
+  transform: translateY(-5px) rotate(calc(var(--rotate, 0deg) * 1.05)) scale(1.01);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.card--cassette .card__art {
+  display: none; /* no cover art */
+}
+
+/* Custom tape label styling */
+.card--cassette .card__cassette-label {
+  background: var(--color-polaroid);
+  color: var(--color-ink);
+  border-radius: 4px;
+  padding: 6px var(--space-3);
+  border-top: 4px solid var(--color-rose);
+  border-bottom: 4px solid var(--color-sage);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.card--cassette .card__title {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-sm);
+  text-align: center;
+  color: var(--color-ink);
+}
+
+.card--cassette .card__artist {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-xs);
+  text-align: center;
+  color: var(--color-pencil);
+}
+
+/* Cassette tape reels container */
+.card--cassette .card__reels {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+  margin: var(--space-2) 0;
+  position: relative;
+}
+
+.card--cassette .card__reel {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #111;
+  border: 3px double #777;
+  position: relative;
+}
+
+.card--cassette .card__reel::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--color-polaroid);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Reel teeth */
+.card--cassette .card__reel-spokes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.card--cassette .card__reel-spokes::after,
+.card--cassette .card__reel-spokes::before {
+  content: '';
+  position: absolute;
+  background: #777;
+  top: 50%;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.card--cassette .card__reel-spokes::before {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+/* Spinning reels animation */
+.card--playing.card--cassette .card__reel-spokes {
+  animation: reel-spin 3s linear infinite;
+}
+
+.card--cassette .card__controls {
+  margin-top: var(--space-2);
+  gap: var(--space-3);
+  z-index: 6;
+}
+
+.card--cassette .card__btn {
+  border-color: var(--color-polaroid);
+  color: var(--color-polaroid);
+  width: 28px;
+  height: 28px;
+}
+
+.card--cassette .card__btn--play {
+  background: var(--color-polaroid);
+  color: var(--color-ink);
+  border-color: var(--color-polaroid);
+}
+
+.card--cassette .card__btn--play:hover {
+  background-color: var(--color-rose);
+  border-color: var(--color-rose);
+  color: var(--color-ink);
+}
+
+.card--cassette .card__progress {
+  display: none; /* No progress bar */
+}
+
+.card--cassette .card__pin {
+  display: none; /* Cassettes don't get push pins, they are resting on the shelf/board */
+}

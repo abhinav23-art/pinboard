@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suhanify — Personal Music Collage</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/cards.css">
+  <link rel="stylesheet" href="/css/player-bar.css">
+  <link rel="stylesheet" href="/css/decorations.css">
+  <link rel="stylesheet" href="/css/search.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="board-header">
+    <h1 class="board-header__title">✎ Suhanify</h1>
+    
+    <div class="board-header__actions">
+      <!-- Search notebook paper -->
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <span class="search-icon">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <input type="text" id="search-input" class="search-input" placeholder="search songs, tags..." aria-label="Search Collection" />
+        </div>
+        <!-- Filter tags -->
+        <div id="filter-tags" class="filter-tags"></div>
+      </div>
+      
+      <!-- Peeling sticker plus button -->
+      <button id="add-btn" class="add-btn" aria-label="Add music files">+</button>
+      <input type="file" id="file-input" class="file-input-hidden" accept="audio/*" multiple />
+    </div>
+  </header>
+
+  <!-- The Collage Board -->
+  <main class="board" id="board" role="list" aria-label="Music collection">
+    <!-- Music cards injected here by JS -->
+    <!-- Decorative elements like tape, pins, doodles layered here by JS -->
+  </main>
+
+  <!-- Bottom Player Bar -->
+  <footer class="player-bar" id="player-bar" role="region" aria-label="Now playing">
+    <!-- Active tape controls template injected by main.js -->
+  </footer>
+
+  <!-- Main JavaScript Bootstrapper -->
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

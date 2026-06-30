@@ -1,0 +1,69 @@
+:root {
+  /* Colors */
+  --color-sketchbook: #F5F0E8;
+  --color-kraft: #C4A882;
+  --color-ink: #2C2926;
+  --color-pencil: #8B8680;
+  --color-rose: #E8A0BF;
+  --color-rose-trans: rgba(232, 160, 191, 0.4);
+  --color-sage: #A8C5A0;
+  --color-sage-trans: rgba(168, 197, 160, 0.4);
+  --color-stamp: #C0392B;
+  --color-sticky: #F7E57A;
+  --color-polaroid: #FAFAFA;
+
+  /* Typography Sizes */
+  --fs-xs: 11px;
+  --fs-sm: 13px;
+  --fs-base: 15px;
+  --fs-md: 18px;
+  --fs-lg: 24px;
+  --fs-xl: 32px;
+  --fs-2xl: 48px;
+
+  /* Typography Families */
+  --ff-display: 'Caveat', cursive;
+  --ff-mono: 'IBM Plex Mono', monospace;
+  --ff-sans: 'Inter', sans-serif;
+
+  /* Shadows */
+  --shadow-card: 2px 3px 8px rgba(44, 41, 38, 0.12),
+                 1px 1px 3px rgba(44, 41, 38, 0.08);
+  --shadow-card-hover: 4px 6px 16px rgba(44, 41, 38, 0.18),
+                       2px 3px 6px rgba(44, 41, 38, 0.10);
+  --shadow-pin: 1px 2px 4px rgba(44, 41, 38, 0.3);
+  --shadow-bar: 0 -2px 12px rgba(44, 41, 38, 0.15);
+  --shadow-tape: 1px 1px 3px rgba(44, 41, 38, 0.08);
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+
+  /* Border Radii */
+  --radius-card: 12px 8px 15px 10px / 10px 15px 8px 12px;
+  --radius-polaroid: 2px;
+  --radius-cassette: 8px;
+  --radius-sticky: 1px 2px 2px 1px / 2px 1px 1px 2px;
+  --radius-round: 50%;
+
+  /* Z-Index Scale */
+  --z-bg: 1;
+  --z-doodles: 2;
+  --z-pins: 3;
+  --z-cards: 4;
+  --z-washi: 5;
+  --z-active-card: 10;
+  --z-player-bar: 100;
+  --z-modal: 200;
+
+  /* Transition Durations */
+  --transition-fast: 0.1s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow: 0.4s ease;
+}
