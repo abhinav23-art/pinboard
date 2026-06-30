@@ -134,14 +134,18 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.click();
   });
 
-  fileInput.addEventListener('change', (e) => {
+  fileInput.addEventListener('change', async (e) => {
     const files = Array.from(e.target.files);
-    files.forEach(file => {
-      const newTrack = audioEngine.addCustomTrack(file);
-      // Re-initialize search so tags update
-      cardRenderer.renderAllCards(audioEngine.tracks);
-      setupSearch('search-input', 'filter-tags', 'board', audioEngine.tracks);
-    });
+    for (const file of files) {
+      try {
+        await audioEngine.addCustomTrack(file);
+        // Re-initialize search so tags update
+        cardRenderer.renderAllCards(audioEngine.tracks);
+        setupSearch('search-input', 'filter-tags', 'board', audioEngine.tracks);
+      } catch (err) {
+        console.error('Failed to add custom track:', err);
+      }
+    }
   });
 
   // Expand player bar to view wobbly visualizer
@@ -437,17 +441,21 @@ document.addEventListener('DOMContentLoaded', () => {
       board.style.outline = 'none';
     });
 
-    board.addEventListener('drop', (e) => {
+    board.addEventListener('drop', async (e) => {
       e.preventDefault();
       board.style.outline = 'none';
 
       const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('audio/'));
-      files.forEach(file => {
-        const newTrack = audioEngine.addCustomTrack(file);
-        // Re-render
-        cardRenderer.renderAllCards(audioEngine.tracks);
-        setupSearch('search-input', 'filter-tags', 'board', audioEngine.tracks);
-      });
+      for (const file of files) {
+        try {
+          await audioEngine.addCustomTrack(file);
+          // Re-render
+          cardRenderer.renderAllCards(audioEngine.tracks);
+          setupSearch('search-input', 'filter-tags', 'board', audioEngine.tracks);
+        } catch (err) {
+          console.error('Failed to upload dropped track:', err);
+        }
+      }
     });
   }
 

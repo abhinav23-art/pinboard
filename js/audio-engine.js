@@ -44,10 +44,19 @@ class AudioEngine {
   }
 
   saveTracksState() {
+    this.syncTracksWithServer();
+  }
+
+  async syncTracksWithServer() {
     try {
       localStorage.setItem('suhanify_tracks', JSON.stringify(this.tracks));
+      await fetch('/api/tracks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.tracks)
+      });
     } catch (e) {
-      console.warn('Failed to save tracks to localStorage', e);
+      console.warn('Failed to sync tracks to server disk (falling back to localStorage):', e);
     }
   }
 
@@ -216,12 +225,27 @@ class AudioEngine {
     };
   }
 
-  addCustomTrack(file) {
-    // Generate URL for local playback
-    const objectUrl = URL.createObjectURL(file);
+  async addCustomTrack(file) {
+    // 1. Upload audio binary directly to the Vite dev server
+    let uploadPath = '';
+    try {
+      const response = await fetch(`/api/upload?name=${encodeURIComponent(file.name)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/octet-stream' },
+        body: file
+      });
+      const result = await response.json();
+      if (result.success) {
+        uploadPath = result.path;
+      } else {
+        throw new Error(result.error || 'Upload failed');
+      }
+    } catch (err) {
+      console.warn('Local upload failed, falling back to Object URL:', err);
+      uploadPath = URL.createObjectURL(file);
+    }
+
     const id = 'custom-' + Date.now() + '-' + Math.floor(Math.random()*1000);
-    
-    // Choose random variant for card representation
     const variants = ['torn', 'polaroid', 'sticky', 'cassette'];
     const weights = [0.4, 0.3, 0.15, 0.15];
     let r = Math.random();
@@ -238,8 +262,7 @@ class AudioEngine {
     const colors = ['#E8A0BF', '#A8C5A0', '#C4A882', '#F7E57A'];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-    // Deduce title/artist from file name
-    let filename = file.name.replace(/\.[^/.]+$/, ""); // strip extension
+    let filename = file.name.replace(/\.[^/.]+$/, "");
     let title = filename;
     let artist = 'Local File';
     if (filename.includes('-')) {
@@ -252,7 +275,7 @@ class AudioEngine {
       id,
       title,
       artist,
-      src: objectUrl,
+      src: uploadPath, // permanent path on local dev server!
       tags: ['local', variant],
       variant,
       color: randomColor,
@@ -260,13 +283,13 @@ class AudioEngine {
     };
 
     this.tracks.push(newTrack);
-    this.saveTracksState();
+    await this.syncTracksWithServer();
 
     this.play(id);
     return newTrack;
   }
 
-  deleteTrack(trackId) {
+  async deleteTrack(trackId) {
     const isPlayingCurrent = this.getCurrentTrack()?.id === trackId;
     if (isPlayingCurrent) {
       this.pause();
@@ -275,7 +298,7 @@ class AudioEngine {
     }
 
     this.tracks = this.tracks.filter(t => t.id !== trackId);
-    this.saveTracksState();
+    await this.syncTracksWithServer();
     
     // Adjust currentTrackIndex
     const currentTrack = this.getCurrentTrack();
@@ -288,12 +311,12 @@ class AudioEngine {
     this.notifyTrackChange();
   }
 
-  editTrack(trackId, newTitle, newArtist) {
+  async editTrack(trackId, newTitle, newArtist) {
     const track = this.tracks.find(t => t.id === trackId);
     if (track) {
       track.title = newTitle;
       track.artist = newArtist;
-      this.saveTracksState();
+      await this.syncTracksWithServer();
       this.notifyTrackChange();
     }
   }
