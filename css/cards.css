@@ -515,3 +515,135 @@
 .card--cassette .card__pin {
   display: none; /* Cassettes don't get push pins, they are resting on the shelf/board */
 }
+
+/* Edit and Delete floating card controls */
+.card__actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  z-index: 12;
+}
+
+.card:hover .card__actions,
+.card:focus-within .card__actions {
+  opacity: 1;
+}
+
+/* Hide card controls, progress, tags, art and cassette spools when editing */
+.card--editing .card__controls,
+.card--editing .card__progress,
+.card--editing .card__tags,
+.card--editing .card__art,
+.card--editing .card__pin,
+.card--editing .card__actions,
+.card--editing .card__cassette-label > *:not(.card__info) {
+  display: none !important;
+}
+
+.card--editing {
+  min-height: 120px !important;
+  background-color: var(--color-polaroid) !important;
+  border-radius: 4px !important;
+  clip-path: none !important;
+}
+
+
+.card__action-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-polaroid);
+  border: 1px solid var(--color-kraft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-pin);
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+  padding: 0;
+}
+
+.card__action-btn:hover {
+  transform: scale(1.2);
+  background-color: var(--color-rose-trans);
+}
+
+.card__action-btn--delete:hover {
+  background-color: rgba(192, 57, 43, 0.2);
+  color: var(--color-stamp);
+  border-color: var(--color-stamp);
+}
+
+.card__action-btn svg {
+  width: 11px;
+  height: 11px;
+  stroke: var(--color-ink);
+  fill: none;
+  stroke-width: 2.5;
+}
+
+/* Inline edit form layout */
+.card__edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: rgba(245, 240, 232, 0.95);
+  padding: var(--space-2);
+  border-radius: 4px;
+  border: 1px dashed var(--color-kraft);
+  box-sizing: border-box;
+}
+
+.card__edit-input {
+  width: 100%;
+  font-family: var(--ff-mono);
+  font-size: var(--fs-xs);
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px dashed var(--color-pencil);
+  outline: none;
+  padding: 2px 0;
+  color: var(--color-ink);
+}
+
+.card__edit-input:focus {
+  border-bottom-color: var(--color-stamp);
+}
+
+.card__edit-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.card__edit-btn {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-xs);
+  padding: 2px 6px;
+  border: 1px solid var(--color-ink);
+  background: transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.card__edit-btn:hover {
+  transform: scale(1.05);
+  background-color: var(--color-rose-trans);
+}
+
+.card__edit-btn--save {
+  background-color: var(--color-ink);
+  color: var(--color-sketchbook);
+}
+
+.card__edit-btn--save:hover {
+  background-color: var(--color-stamp);
+  border-color: var(--color-stamp);
+  color: var(--color-sketchbook);
+}
+

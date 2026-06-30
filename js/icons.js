@@ -43,5 +43,15 @@ export const ICONS = {
     <svg viewBox="0 0 24 24" width="24" height="24">
       <path d="M18 6 L6 18 M6 6 L18 18" />
     </svg>
+  `,
+  edit: `
+    <svg viewBox="0 0 24 24" width="24" height="24">
+      <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+    </svg>
+  `,
+  delete: `
+    <svg viewBox="0 0 24 24" width="24" height="24">
+      <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" />
+    </svg>
   `
 };

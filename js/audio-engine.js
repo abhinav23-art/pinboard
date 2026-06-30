@@ -33,19 +33,21 @@ class AudioEngine {
         this.audio.volume = 0.8;
       }
 
-      // Restoring tracks from localStorage if user added custom files
-      const savedTracks = localStorage.getItem('suhanify_custom_tracks');
+      // Restoring all tracks from localStorage (with edits/deletions)
+      const savedTracks = localStorage.getItem('suhanify_tracks');
       if (savedTracks) {
-        const customTracks = JSON.parse(savedTracks);
-        // Deduplicate and add to track list
-        customTracks.forEach(t => {
-          if (!this.tracks.find(existing => existing.id === t.id)) {
-            this.tracks.push(t);
-          }
-        });
+        this.tracks = JSON.parse(savedTracks);
       }
     } catch (e) {
       console.warn('Failed to load state from localStorage', e);
+    }
+  }
+
+  saveTracksState() {
+    try {
+      localStorage.setItem('suhanify_tracks', JSON.stringify(this.tracks));
+    } catch (e) {
+      console.warn('Failed to save tracks to localStorage', e);
     }
   }
 
@@ -258,27 +260,42 @@ class AudioEngine {
     };
 
     this.tracks.push(newTrack);
-
-    // Save custom track metadata (excluding the objectUrl since it's temporary across reloads, 
-    // but the track list will preserve its local storage presence for structural reload)
-    this.saveCustomTracksState();
+    this.saveTracksState();
 
     this.play(id);
     return newTrack;
   }
 
-  saveCustomTracksState() {
-    const customTracks = this.tracks.filter(t => t.isCustom).map(t => ({
-      id: t.id,
-      title: t.title,
-      artist: t.artist,
-      tags: t.tags,
-      variant: t.variant,
-      color: t.color,
-      isCustom: true
-      // src objectUrl will be void on reload, we'll re-bind file pickers if loaded, but metadata persists
-    }));
-    localStorage.setItem('suhanify_custom_tracks', JSON.stringify(customTracks));
+  deleteTrack(trackId) {
+    const isPlayingCurrent = this.getCurrentTrack()?.id === trackId;
+    if (isPlayingCurrent) {
+      this.pause();
+      this.audio.src = '';
+      this.currentTrackIndex = -1;
+    }
+
+    this.tracks = this.tracks.filter(t => t.id !== trackId);
+    this.saveTracksState();
+    
+    // Adjust currentTrackIndex
+    const currentTrack = this.getCurrentTrack();
+    if (currentTrack) {
+      this.currentTrackIndex = this.tracks.findIndex(t => t.id === currentTrack.id);
+    } else {
+      this.currentTrackIndex = -1;
+    }
+    
+    this.notifyTrackChange();
+  }
+
+  editTrack(trackId, newTitle, newArtist) {
+    const track = this.tracks.find(t => t.id === trackId);
+    if (track) {
+      track.title = newTitle;
+      track.artist = newArtist;
+      this.saveTracksState();
+      this.notifyTrackChange();
+    }
   }
 
   notifyTrackChange() {

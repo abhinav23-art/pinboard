@@ -251,7 +251,15 @@ export class CardRenderer {
     card.style.setProperty('--card-z', pos.zIndex);
     card.style.animationDelay = `${index * 0.05}s`;
 
-    card.innerHTML = this.renderCardHTML(track, variant);
+    // Wrap the card layout and add floating action buttons
+    const actionButtons = `
+      <div class="card__actions">
+        <button class="card__action-btn card__action-btn--edit" title="Edit Track Info">${ICONS.edit}</button>
+        <button class="card__action-btn card__action-btn--delete" title="Delete Track">${ICONS.delete}</button>
+      </div>
+    `;
+
+    card.innerHTML = actionButtons + this.renderCardHTML(track, variant);
 
     // Bind event listeners inside card
     this.bindCardEvents(card, track.id);
@@ -264,6 +272,8 @@ export class CardRenderer {
     const prevBtn = card.querySelector('.card__btn--prev');
     const nextBtn = card.querySelector('.card__btn--next');
     const slider = card.querySelector('.card__slider');
+    const editBtn = card.querySelector('.card__action-btn--edit');
+    const deleteBtn = card.querySelector('.card__action-btn--delete');
 
     if (playBtn) {
       playBtn.addEventListener('click', (e) => {
@@ -299,6 +309,28 @@ export class CardRenderer {
       slider.addEventListener('mousedown', (e) => e.stopPropagation());
     }
 
+    if (editBtn) {
+      editBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.enterEditMode(card, trackId);
+      });
+    }
+
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (confirm('Are you sure you want to delete this track from your pinboard?')) {
+          card.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+          card.style.transform = 'scale(0.1) rotate(45deg)';
+          card.style.opacity = '0';
+          setTimeout(() => {
+            audioEngine.deleteTrack(trackId);
+            this.renderAllCards(audioEngine.tracks);
+          }, 400);
+        }
+      });
+    }
+
     // Clicking card background focuses it or expands it
     card.addEventListener('click', () => {
       // Bring card to front
@@ -316,6 +348,63 @@ export class CardRenderer {
       const x = parseFloat(card.style.getPropertyValue('--x'));
       const y = parseFloat(card.style.getPropertyValue('--y'));
       this.savePosition(trackId, x, y, rotate, newZ);
+    });
+  }
+
+  enterEditMode(card, trackId) {
+    const track = audioEngine.tracks.find(t => t.id === trackId);
+    if (!track) return;
+
+    // Save original HTML to restore on cancel
+    const originalHTML = card.innerHTML;
+    card.classList.add('card--editing');
+
+    card.innerHTML = `
+      <div class="card__edit-container">
+        <label style="font-family: var(--ff-mono); font-size: 10px; color: var(--color-pencil); display: block; margin-bottom: 2px;">Edit Title</label>
+        <input type="text" class="card__edit-input card__edit-input--title" value="${track.title}" />
+        
+        <label style="font-family: var(--ff-mono); font-size: 10px; color: var(--color-pencil); display: block; margin-top: 6px; margin-bottom: 2px;">Edit Artist</label>
+        <input type="text" class="card__edit-input card__edit-input--artist" value="${track.artist}" />
+        
+        <div class="card__edit-btn-row">
+          <button class="card__edit-btn card__edit-btn--cancel">Cancel</button>
+          <button class="card__edit-btn card__edit-btn--save">Save</button>
+        </div>
+      </div>
+    `;
+
+    // Prevent dragging or other clicking during editing
+    const stopProp = (e) => e.stopPropagation();
+    const editContainer = card.querySelector('.card__edit-container');
+    editContainer.addEventListener('mousedown', stopProp);
+    editContainer.addEventListener('pointerdown', stopProp);
+
+    const cancelBtn = card.querySelector('.card__edit-btn--cancel');
+    const saveBtn = card.querySelector('.card__edit-btn--save');
+    const titleInput = card.querySelector('.card__edit-input--title');
+    const artistInput = card.querySelector('.card__edit-input--artist');
+
+    titleInput.focus();
+
+    cancelBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      card.classList.remove('card--editing');
+      card.innerHTML = originalHTML;
+      // Re-bind original events!
+      this.bindCardEvents(card, trackId);
+    });
+
+    saveBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const newTitle = titleInput.value.trim() || track.title;
+      const newArtist = artistInput.value.trim() || track.artist;
+      
+      // Update in audio engine
+      audioEngine.editTrack(trackId, newTitle, newArtist);
+      
+      // Re-render
+      this.renderAllCards(audioEngine.tracks);
     });
   }
 

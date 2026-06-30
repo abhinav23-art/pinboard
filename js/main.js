@@ -56,6 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateActiveStates(state);
     updatePlayerBarUI(state);
     
+    // Update search indexing and tags on database changes (deletion/edits)
+    setupSearch('search-input', 'filter-tags', 'board', audioEngine.tracks);
+    
     // Trigger visualizer loop if expanded
     if (state.isPlaying && isExpanded) {
       startVisualizer();
