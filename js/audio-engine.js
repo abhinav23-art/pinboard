@@ -60,9 +60,22 @@ class AudioEngine {
       }
       
       if (savedTracks) {
-        this.tracks = JSON.parse(savedTracks);
-        // Automatically sync to disk server on startup!
-        this.syncTracksWithServer();
+        const parsed = JSON.parse(savedTracks);
+        const hasOldTracks = parsed.some(t => {
+          const num = parseInt(t.id.replace('track-', ''));
+          return !isNaN(num) && num > 21;
+        });
+
+        if (hasOldTracks) {
+          localStorage.removeItem('suhanify_tracks');
+          localStorage.removeItem('suhanify_card_positions');
+          this.tracks = [...trackList];
+          this.saveTracksState();
+        } else {
+          this.tracks = parsed;
+          // Automatically sync to disk server on startup!
+          this.syncTracksWithServer();
+        }
       }
     } catch (e) {
       console.warn('Failed to load state from localStorage', e);
