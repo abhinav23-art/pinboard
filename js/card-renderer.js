@@ -74,25 +74,34 @@ export class CardRenderer {
     }
   }
 
-  // Scatter positions algorithm
   calculateScatterPosition(index, total, trackId) {
     // If we have a saved position, return it
     if (this.savedPositions[trackId]) {
+      const cols = Math.min(3, Math.ceil(Math.sqrt(total)));
+      const rows = Math.ceil(total / cols);
+      const cardSpacingY = 380; 
+      const boardHeight = Math.max(window.innerHeight - 150, rows * cardSpacingY + 100);
+      this.board.style.height = `${boardHeight}px`;
+
       return this.savedPositions[trackId];
     }
 
     const boardWidth = this.board.clientWidth || window.innerWidth;
-    const boardHeight = this.board.clientHeight || (window.innerHeight - 150);
+    
+    // Calculate dynamic board height based on rows
+    const cols = Math.min(3, Math.ceil(Math.sqrt(total)));
+    const rows = Math.ceil(total / cols);
+    const cardSpacingY = 380; // card height is ~300, spacing of 380 is perfect
+    const boardHeight = Math.max(window.innerHeight - 150, rows * cardSpacingY + 100);
+    
+    // Apply height to board element
+    this.board.style.height = `${boardHeight}px`;
 
     // Keep padding from boundaries
     const paddingX = 80;
     const paddingY = 80;
     const activeWidth = boardWidth - paddingX * 2;
     const activeHeight = boardHeight - paddingY * 2;
-
-    // Define loose grid zones
-    const cols = Math.min(3, Math.ceil(Math.sqrt(total)));
-    const rows = Math.ceil(total / cols);
 
     const colIndex = index % cols;
     const rowIndex = Math.floor(index / cols);
@@ -104,18 +113,18 @@ export class CardRenderer {
     const zoneCenterX = paddingX + colIndex * zoneWidth + zoneWidth / 2;
     const zoneCenterY = paddingY + rowIndex * zoneHeight + zoneHeight / 2;
 
-    // Add random offsets within the zone
-    const offsetX = (Math.random() - 0.5) * (zoneWidth * 0.4);
-    const offsetY = (Math.random() - 0.5) * (zoneHeight * 0.4);
+    // Add random offsets within the zone (small offsets to avoid extreme overlap)
+    const offsetX = (Math.random() - 0.5) * (zoneWidth * 0.3);
+    const offsetY = (Math.random() - 0.5) * (zoneHeight * 0.2);
 
-    let x = zoneCenterX + offsetX - 130; // center offset (card width is ~260)
-    let y = zoneCenterY + offsetY - 150; // center offset (card height is ~300)
+    let x = zoneCenterX + offsetX - 130; // card width is 260
+    let y = zoneCenterY + offsetY - 150; // card height is ~300
 
     // Boundaries clamping
     x = Math.max(20, Math.min(boardWidth - 280, x));
     y = Math.max(20, Math.min(boardHeight - 340, y));
 
-    const rotate = (Math.random() * 8 - 4).toFixed(1); // random rotate between -4 and +4
+    const rotate = (Math.random() * 6 - 3).toFixed(1); // random rotate between -3 and +3
     const zIndex = 10 + index;
 
     // Save so it remains consistent

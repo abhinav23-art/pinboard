@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const playerBar = document.getElementById('player-bar');
   const fileInput = document.getElementById('file-input');
   const addBtn = document.getElementById('add-btn');
+  const tidyBtn = document.getElementById('tidy-btn');
   
   // Inject player bar default template
   setupPlayerBarHTML();
@@ -42,6 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Setup search and filter tags
   setupSearch('search-input', 'filter-tags', 'board', audioEngine.tracks);
+
+  if (tidyBtn) {
+    tidyBtn.addEventListener('click', () => {
+      localStorage.removeItem(cardRenderer.positionsKey);
+      cardRenderer.savedPositions = {};
+      cardRenderer.renderAllCards(audioEngine.tracks);
+    });
+  }
 
   // Setup Drag-and-drop file additions directly onto board
   setupDragAndDrop();
